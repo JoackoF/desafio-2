@@ -10,6 +10,8 @@ import udb.edu.sv.domain.Materia;
 import udb.edu.sv.service.IMateriaService;
 import udb.edu.sv.util.ResponseBuilder;
 import udb.edu.sv.dto.ApiResponse;
+import udb.edu.sv.exception.BadRequestException;
+import udb.edu.sv.exception.NotFoundException;
 
 import java.util.List;
 
@@ -40,13 +42,13 @@ public class MateriaController {
     public ResponseEntity<ApiResponse<Materia>> obtenerPorId(@PathVariable Long id) {
 
         if (id == null || id <= 0) {
-            throw new RuntimeException("El ID debe ser mayor a 0");
+            throw new BadRequestException("El ID debe ser mayor a 0");
         }
 
         Materia materia = service.findById(id);
 
         if (materia == null) {
-            throw new RuntimeException("Materia no encontrada con ID: " + id);
+            throw new NotFoundException("Materia no encontrada con ID: " + id);
         }
 
         return ResponseEntity.ok(ResponseBuilder.success(materia));
@@ -56,7 +58,7 @@ public class MateriaController {
     public ResponseEntity<ApiResponse<Materia>> crear(@Valid @RequestBody Materia materia) {
 
         if (materia.getNombre() == null || materia.getNombre().trim().isEmpty()) {
-            throw new RuntimeException("El nombre de la materia es obligatorio");
+            throw new BadRequestException("El nombre de la materia es obligatorio");
         }
 
         Materia guardada = service.save(materia);
@@ -72,17 +74,17 @@ public class MateriaController {
     ) {
 
         if (id == null || id <= 0) {
-            throw new RuntimeException("El ID debe ser mayor a 0");
+            throw new BadRequestException("El ID debe ser mayor a 0");
         }
 
         Materia existente = service.findById(id);
 
         if (existente == null) {
-            throw new RuntimeException("La materia no existe");
+            throw new NotFoundException("La materia no existe");
         }
 
         if (materia.getNombre() == null || materia.getNombre().trim().isEmpty()) {
-            throw new RuntimeException("El nombre de la materia es obligatorio");
+            throw new BadRequestException("El nombre de la materia es obligatorio");
         }
 
         materia.setId(id);
@@ -98,13 +100,13 @@ public class MateriaController {
     public ResponseEntity<ApiResponse<Object>> eliminar(@PathVariable Long id) {
 
         if (id == null || id <= 0) {
-            throw new RuntimeException("El ID debe ser mayor a 0");
+            throw new BadRequestException("El ID debe ser mayor a 0");
         }
 
         Materia materia = service.findById(id);
 
         if (materia == null) {
-            throw new RuntimeException("Materia no encontrada con ID: " + id);
+            throw new NotFoundException("Materia no encontrada con ID: " + id);
         }
 
         service.delete(id);

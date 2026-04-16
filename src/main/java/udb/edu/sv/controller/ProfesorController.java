@@ -10,6 +10,8 @@ import udb.edu.sv.domain.Profesor;
 import udb.edu.sv.service.IProfesorService;
 import udb.edu.sv.util.ResponseBuilder;
 import udb.edu.sv.dto.ApiResponse;
+import udb.edu.sv.exception.BadRequestException;
+import udb.edu.sv.exception.NotFoundException;
 
 import java.util.List;
 
@@ -40,13 +42,13 @@ public class ProfesorController {
     public ResponseEntity<ApiResponse<Profesor>> obtenerPorId(@PathVariable Long id) {
 
         if (id == null || id <= 0) {
-            throw new RuntimeException("El ID debe ser mayor a 0");
+            throw new BadRequestException("El ID debe ser mayor a 0");
         }
 
         Profesor profesor = service.findById(id);
 
         if (profesor == null) {
-            throw new RuntimeException("Profesor no encontrado con ID: " + id);
+            throw new NotFoundException("Profesor no encontrado con ID: " + id);
         }
 
         return ResponseEntity.ok(ResponseBuilder.success(profesor));
@@ -56,7 +58,7 @@ public class ProfesorController {
     public ResponseEntity<ApiResponse<Profesor>> crear(@Valid @RequestBody Profesor profesor) {
 
         if (profesor.getNombre() == null || profesor.getNombre().trim().isEmpty()) {
-            throw new RuntimeException("El nombre del profesor es obligatorio");
+            throw new BadRequestException("El nombre del profesor es obligatorio");
         }
 
         Profesor guardado = service.save(profesor);
@@ -72,17 +74,17 @@ public class ProfesorController {
     ) {
 
         if (id == null || id <= 0) {
-            throw new RuntimeException("El ID debe ser mayor a 0");
+            throw new BadRequestException("El ID debe ser mayor a 0");
         }
 
         Profesor existente = service.findById(id);
 
         if (existente == null) {
-            throw new RuntimeException("No se puede actualizar: el profesor no existe");
+            throw new NotFoundException("No se puede actualizar: el profesor no existe");
         }
 
         if (profesor.getNombre() == null || profesor.getNombre().trim().isEmpty()) {
-            throw new RuntimeException("El nombre del profesor es obligatorio");
+            throw new BadRequestException("El nombre del profesor es obligatorio");
         }
 
         profesor.setId(id);
@@ -98,13 +100,13 @@ public class ProfesorController {
     public ResponseEntity<ApiResponse<Object>> eliminar(@PathVariable Long id) {
 
         if (id == null || id <= 0) {
-            throw new RuntimeException("El ID debe ser mayor a 0");
+            throw new BadRequestException("El ID debe ser mayor a 0");
         }
 
         Profesor profesor = service.findById(id);
 
         if (profesor == null) {
-            throw new RuntimeException("Profesor no encontrado con ID: " + id);
+            throw new NotFoundException("Profesor no encontrado con ID: " + id);
         }
 
         service.delete(id);
