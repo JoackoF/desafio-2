@@ -27,4 +27,12 @@ public class ResponseBuilder {
                 .message(message)
                 .build();
     }
+
+    public static <T> ApiResponse<T> errorWithData(String message, T data) {
+        return ApiResponse.<T>builder()
+                .success(false)
+                .data(data)
+                .message(message)
+                .build();
+    }
 }
