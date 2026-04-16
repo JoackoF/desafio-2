@@ -15,5 +15,11 @@ public class ProfesorServiceImpl implements IProfesorService {
     @Override public List<Profesor> findAll() { return repository.findAll(); }
     @Override public Profesor findById(Long id) { return repository.findById(id).orElse(null); }
     @Override public Profesor save(Profesor profesor) { return repository.save(profesor); }
-    @Override public void delete(Long id) { repository.deleteById(id); }
+    @Override
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("No se puede eliminar. El profesor no existe");
+        }
+        repository.deleteById(id);
+    }
 }

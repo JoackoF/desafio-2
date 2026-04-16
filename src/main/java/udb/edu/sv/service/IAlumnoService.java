@@ -8,4 +8,7 @@ public interface IAlumnoService {
     Alumno save(Alumno alumno);
     Alumno findById(Long id);
     void delete(Long id);
+
+    boolean tieneRelaciones(Long id);
+    boolean existsById(Long id);
 }
